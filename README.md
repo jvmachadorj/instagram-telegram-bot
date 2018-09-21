@@ -1,5 +1,5 @@
-#Instagram-Telegram-Bot
-##What it does
+# Instagram-Telegram-Bot
+## What it does
 In the .env file you need to put your initial settings
 
 ```
@@ -16,7 +16,7 @@ The `PIXA_BAY_KEY` in the key from <https://pixabay.com/> and to get the jey, he
 
 USERNAME and PASSWORD is from your Instagram account.
 
-##Setting up your virtual enviroment
+## Setting up your virtual enviroment
 
 I'm supposing you have already installed python in your machine. If not, just follow this <https://realpython.com/installing-python/>
 
@@ -28,7 +28,7 @@ Navigate to the projects directory and excecute `virtualenv -p python3 venv`
 
 To activate `source venv/bin/activate`
 
-##Install Requirements.txt
+## Install Requirements.txt
 
 After installing the virtual env and to activate it, run this code to install all necessary requirements for the project
 `pip install -r requirements.txt`
