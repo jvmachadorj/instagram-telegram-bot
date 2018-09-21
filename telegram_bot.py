@@ -104,7 +104,7 @@ bot = telepot.DelegatorBot(config('TOKEN'), [
     include_callback_query_chat_id(
         pave_event_space())(
         per_chat_id(types=['private']), create_open, GeneratePost,
-        timeout=99999999),
+        timeout=10),
 ])
 MessageLoop(bot).run_as_thread()
 print('Listening ...')
