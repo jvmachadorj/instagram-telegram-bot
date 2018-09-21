@@ -107,3 +107,6 @@ bot = telepot.DelegatorBot(config('TOKEN'), [
 ])
 MessageLoop(bot).run_as_thread()
 print('Listening ...')
+
+while 1:
+    time.sleep(5)
