@@ -103,11 +103,7 @@ class GeneratePost(telepot.helper.ChatHandler):
 bot = telepot.DelegatorBot(config('TOKEN'), [
     include_callback_query_chat_id(
         pave_event_space())(
-        per_chat_id(types=['private']), create_open, GeneratePost,
-        timeout=5000),
+        per_chat_id(types=['private']), create_open, GeneratePost),
 ])
 MessageLoop(bot).run_as_thread()
 print('Listening ...')
-
-while 1:
-    time.sleep(5000)
