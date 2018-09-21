@@ -31,6 +31,7 @@ var/
 *.manifest
 *.spec
 .idea
+.db
 
 # Installer logs
 pip-log.txt
