@@ -23,7 +23,7 @@ def upload_photos():
     querystring = {"key": KEY, "q": query_tags, "image_type": "photo",
                    "category": query_categories,
                    "safesearch": "true", "per_page": per_page}
-
+    time.sleep(5)
     response = requests.request("GET", URL, params=querystring)
 
     result = ast.literal_eval(response.text)['hits']
@@ -47,6 +47,7 @@ def download_photo():
                 script_path = os.path.dirname(__file__)
                 rel_path = 'images/{}'.format(filename)
                 path = os.path.join(script_path, rel_path)
+                time.sleep(5)
                 r = requests.get(url, allow_redirects=True)
                 open(path, 'wb').write(r.content)
                 image = save_to_db(result, path, url)
@@ -59,7 +60,6 @@ def download_photo():
             status = True
             while i <= int(per_page) and status:
                 n = randint(0, int(per_page) - 1)
-                time.sleep(5)
                 result = upload_photos()[n]
                 image_obj = Image.get_or_none(pixabay_id=result['id'])
                 if image_obj.status == "Not Posted":
