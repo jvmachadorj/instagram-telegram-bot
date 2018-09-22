@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 import peewee
@@ -19,7 +20,7 @@ except peewee.OperationalError:
     print('Tabela já existe')
 
 image = None
-login = InstagramAPI(config('USERNAME'), config('PASSWORD'))
+login = InstagramAPI(config('USERNAME_INSTAGRAM'), config('PASSWORD'))
 login.login()
 
 
@@ -31,7 +32,7 @@ def post_on_instagram():
     print("Posted with caption {}".format(image.caption))
 
 
-class GeneratePost(telepot.helper.ChatHandler):
+class GeneratePost(telepot.aio.helper.ChatHandler):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[[
         InlineKeyboardButton(text='Yes', callback_data='yes'),
         InlineKeyboardButton(text='No', callback_data='no'),
@@ -42,7 +43,7 @@ class GeneratePost(telepot.helper.ChatHandler):
         global propose_records
         if self.id in propose_records:
             self._count, self._edit_msg_ident = propose_records[self.id]
-            self._editor = telepot.helper.Editor(self.bot,
+            self._editor = telepot.aio.helper.Editor(self.bot,
                                                  self._edit_msg_ident) \
                 if self._edit_msg_ident else None
         else:
@@ -50,56 +51,56 @@ class GeneratePost(telepot.helper.ChatHandler):
             self._edit_msg_ident = None
             self._editor = None
 
-    def _cancel_last(self):
+    async def _cancel_last(self):
         if self._editor:
-            self._editor.editMessageReplyMarkup(reply_markup=None)
+            await self._editor.editMessageReplyMarkup(reply_markup=None)
             self._editor = None
             self._edit_msg_ident = None
 
-    def on__idle(self, event):
+    async def on__idle(self, event):
         self.sender.sendMessage('I know you may need a little time to decide.')
         self.close()
 
-    def on_close(self, ex):
+    async def on_close(self, ex):
         # Save to database
         global propose_records
         propose_records[self.id] = (self._count, self._edit_msg_ident)
 
-    def _propose(self):
+    async def _propose(self):
         global image
         image = download_photo()
 
         post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
             image.url, image.caption)
 
-        sent = self.sender.sendMessage(post, reply_markup=self.keyboard)
+        sent = await self.sender.sendMessage(post, reply_markup=self.keyboard)
         self._editor = telepot.helper.Editor(self.bot, sent)
         self._edit_msg_ident = telepot.message_identifier(sent)
 
-    def on_chat_message(self, msg):
-        self._propose()
+    async def on_chat_message(self, msg):
+        await self._propose()
 
-    def on_callback_query(self, msg):
+    async def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg,
                                                        flavor='callback_query')
 
         if query_data == 'yes':
             post_on_instagram()
-            self.sender.sendMessage(
+            await self.sender.sendMessage(
                 'Image posted! Check it out at: https://www.instagram.com/{}/'
-                .format(config('USERNAME')))
+                .format(config('USERNAME_INSTAGRAM')))
             change_image_status(image)
-            self.close()
+            await self.close()
         else:
-            self.bot.answerCallbackQuery(
+            await self.bot.answerCallbackQuery(
                 query_id, text='Alright! Lets try another picture.'
             )
-            self._cancel_last()
+            await self._cancel_last()
             time.sleep(5)
-            self._propose()
+            await self._propose()
 
 
-bot = telepot.DelegatorBot(config('TOKEN'), [
+bot = telepot.aio.DelegatorBot(config('TOKEN'), [
     include_callback_query_chat_id(
         pave_event_space())(
         per_chat_id(types=['private']), create_open, GeneratePost,
