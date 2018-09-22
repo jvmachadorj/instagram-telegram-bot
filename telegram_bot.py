@@ -4,9 +4,8 @@ import peewee
 import telepot
 from InstagramAPI import InstagramAPI
 from decouple import config
-from telepot.delegate import (
-    per_chat_id, create_open, pave_event_space, include_callback_query_chat_id)
-from telepot.loop import MessageLoop
+from telepot.aio.loop import MessageLoop
+from telepot.aio.delegate import pave_event_space, per_chat_id, create_open, include_callback_query_chat_id
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 from models import Image
