@@ -106,8 +106,9 @@ bot = telepot.DelegatorBot(config('TOKEN'), [
         per_chat_id(types=['private']), create_open, GeneratePost,
         timeout=10),
 ])
-MessageLoop(bot).run_as_thread()
+
+loop = asyncio.get_event_loop()
+loop.create_task(MessageLoop(bot).run_forever())
 print('Listening ...')
 
-while 1:
-    time.sleep(5)
+loop.run_forever()
