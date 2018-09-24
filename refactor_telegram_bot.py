@@ -7,7 +7,8 @@ from decouple import config
 from telepot.aio.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-from upload_photos import download_photo, change_image_status, post_on_instagram
+from upload_photos import download_photo, change_image_status, \
+    post_on_instagram, get_post
 
 """
 $ python3.5 skeletona_route.py <token>
@@ -57,9 +58,7 @@ async def on_chat_message(msg):
 
     global image
     image = download_photo()
-
-    post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
-        image.url, image.caption)
+    post = get_post(image)
 
     global message_with_inline_keyboard
     message_with_inline_keyboard = await bot.sendMessage(chat_id, post,
