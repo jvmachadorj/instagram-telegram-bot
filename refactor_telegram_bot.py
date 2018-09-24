@@ -42,11 +42,14 @@ chat_id_reply = None
 async def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
     print('Chat:', content_type, chat_type, chat_id)
-    global chat_id_reply
-    chat_id_reply = chat_id
 
     if content_type != 'text':
         return
+
+    global chat_id_reply
+    global image
+    chat_id_reply = chat_id
+    image = download_photo()
 
     command = msg['text'][-1:].lower()
     print(command, msg['text'])
@@ -56,8 +59,6 @@ async def on_chat_message(msg):
         InlineKeyboardButton(text='No', callback_data='no'),
     ]])
 
-    global image
-    image = download_photo()
     post = get_post(image)
 
     global message_with_inline_keyboard
@@ -76,7 +77,7 @@ async def on_callback_query(msg):
         post_on_instagram(image, login)
         change_image_status(image)
         text = 'Image posted! Check it out at: https://www.instagram.com/{}/' \
-               ' /n /n Click here to generate a /new_post'.format(
+               ' \n \n Click here to generate a /new_post'.format(
             config('USERNAME'))
         await bot.sendMessage(chat_id_reply, text=text)
     else:
