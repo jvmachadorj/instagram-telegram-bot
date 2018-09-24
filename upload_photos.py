@@ -69,7 +69,8 @@ def download_photo():
                 else:
                     i += 1
                     status = True
-        per_page = int(per_page)+10
+            per_page = int(per_page)+10
+        error = False
 
 
 def treat_tags(tags):
@@ -103,4 +104,11 @@ def save_to_db(line, path, url):
 def change_image_status(image):
     image.status = "Posted"
     image.save()
+
+
+def post_on_instagram(image, login):
+
+    # Upload Photo
+    login.uploadPhoto(image.path, caption=image.caption, upload_id=None)
+    print("Posted with caption {}".format(image.caption))
 

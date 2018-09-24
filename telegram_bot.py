@@ -83,6 +83,8 @@ class GeneratePost(telepot.helper.ChatHandler):
     def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg,
                                                        flavor='callback_query')
+        print('CallbackQuery: queryid:{} chatid:{} querydata:{}'
+              .format(query_id, from_id, query_data))
 
         if query_data == 'yes':
             post_on_instagram()
@@ -104,7 +106,7 @@ bot = telepot.DelegatorBot(config('TOKEN'), [
     include_callback_query_chat_id(
         pave_event_space())(
         per_chat_id(types=['private']), create_open, GeneratePost,
-        timeout=99999999),
+        timeout=10),
 ])
 MessageLoop(bot).run_as_thread()
 print('Listening ...')
