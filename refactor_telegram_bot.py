@@ -8,7 +8,7 @@ from telepot.aio.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 from upload_photos import download_photo, change_image_status, \
-    post_on_instagram, get_post
+    post_on_instagram
 
 """
 $ python3.5 skeletona_route.py <token>
@@ -32,11 +32,36 @@ It works like this:
 message_with_inline_keyboard = None
 
 image = None
+
+chat_id_reply = None
+
 login = InstagramAPI(config('USERNAME'), config('PASSWORD'))
 login.login()
 print(login)
 
-chat_id_reply = None
+
+def make_post():
+    global image
+    url = image.url
+    caption = image.caption
+
+    post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
+        url, caption)
+
+    return post
+
+
+def generate_post():
+
+    global chat_id_reply
+    global image
+    image = download_photo()
+    markup = InlineKeyboardMarkup(inline_keyboard=[[
+        InlineKeyboardButton(text='Yes', callback_data='yes'),
+        InlineKeyboardButton(text='No', callback_data='no'),
+    ]])
+
+    return {'markup': markup, 'url': image.url, 'caption': image.caption}
 
 
 async def on_chat_message(msg):
@@ -47,23 +72,16 @@ async def on_chat_message(msg):
         return
 
     global chat_id_reply
-    global image
     chat_id_reply = chat_id
-    image = download_photo()
-
     command = msg['text'][-1:].lower()
     print(command, msg['text'])
 
-    markup = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text='Yes', callback_data='yes'),
-        InlineKeyboardButton(text='No', callback_data='no'),
-    ]])
-
-    post = get_post(image)
+    result = generate_post()
+    post = make_post()
 
     global message_with_inline_keyboard
     message_with_inline_keyboard = await bot.sendMessage(chat_id, post,
-                                                         reply_markup=markup)
+                                                         reply_markup=result['markup'])
 
 
 async def on_callback_query(msg):
@@ -81,8 +99,11 @@ async def on_callback_query(msg):
             config('USERNAME'))
         await bot.sendMessage(chat_id_reply, text=text)
     else:
+        result = generate_post()
+        post = make_post()
         await bot.sendMessage(chat_id_reply,
-                              text='Alright! Lets try another picture. Click here /new_post')
+                              text=post,
+                              reply_markup=result['markup'])
 
 
 bot = telepot.aio.Bot(config('TOKEN'))

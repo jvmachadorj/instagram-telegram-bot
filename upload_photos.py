@@ -1,4 +1,5 @@
 import ast
+import asyncio
 import datetime
 import os
 import time
@@ -111,13 +112,3 @@ def post_on_instagram(image, login):
     # Upload Photo
     login.uploadPhoto(image.path, caption=image.caption, upload_id=None)
     print("Posted with caption {}".format(image.caption))
-
-
-def get_post(image):
-
-    post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
-        image.url, image.caption)
-
-    return post
-
-
