@@ -40,17 +40,6 @@ login.login()
 print(login)
 
 
-def make_post():
-    global image
-    url = image.url
-    caption = image.caption
-
-    post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
-        url, caption)
-
-    return post
-
-
 def generate_post():
 
     global chat_id_reply
@@ -61,7 +50,13 @@ def generate_post():
         InlineKeyboardButton(text='No', callback_data='no'),
     ]])
 
-    return {'markup': markup, 'url': image.url, 'caption': image.caption}
+    url = image.url
+    caption = image.caption
+
+    post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
+        url, caption)
+
+    return {'markup': markup, 'url': image.url, 'caption': image.caption, 'post': post}
 
 
 async def on_chat_message(msg):
@@ -77,10 +72,9 @@ async def on_chat_message(msg):
     print(command, msg['text'])
 
     result = generate_post()
-    post = make_post()
 
     global message_with_inline_keyboard
-    message_with_inline_keyboard = await bot.sendMessage(chat_id, post,
+    message_with_inline_keyboard = await bot.sendMessage(chat_id, result['post'],
                                                          reply_markup=result['markup'])
 
 
@@ -100,9 +94,8 @@ async def on_callback_query(msg):
         await bot.sendMessage(chat_id_reply, text=text)
     else:
         result = generate_post()
-        post = make_post()
         await bot.sendMessage(chat_id_reply,
-                              text=post,
+                              text=result['post'],
                               reply_markup=result['markup'])
 
 
