@@ -45,6 +45,7 @@ def generate_post():
     global chat_id_reply
     global image
     image = download_photo()
+    
     markup = InlineKeyboardMarkup(inline_keyboard=[[
         InlineKeyboardButton(text='Yes', callback_data='yes'),
         InlineKeyboardButton(text='No', callback_data='no'),
@@ -56,7 +57,7 @@ def generate_post():
     post = "{} \n \n Caption: {} \n \n Do you want to post it?".format(
         url, caption)
 
-    return {'markup': markup, 'url': image.url, 'caption': image.caption, 'post': post}
+    return {'markup': markup, 'url': url, 'caption': caption, 'post': post}
 
 
 async def on_chat_message(msg):
