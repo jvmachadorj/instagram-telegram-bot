@@ -54,7 +54,7 @@ def generate_post():
     global chat_id_reply
     global image
     image = download_photo()
-    time.sleep(15)
+    time.sleep(10)
     
     markup = InlineKeyboardMarkup(inline_keyboard=[[
         InlineKeyboardButton(text='Yes', callback_data='yes'),
