@@ -57,7 +57,8 @@ def download_photo():
     global per_page
     global status
     r = randint(0, int(per_page))
-    result = upload_photos()[r]
+    result = upload_photos()
+    result = result[r]
     image_obj = Image.get_or_none(pixabay_id=result['id'])
     error = True
 
