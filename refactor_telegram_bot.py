@@ -1,5 +1,6 @@
 import asyncio
 
+import peewee
 import telepot
 import telepot.aio
 from InstagramAPI import InstagramAPI
@@ -7,6 +8,7 @@ from decouple import config
 from telepot.aio.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
+from models import Image
 from upload_photos import download_photo, change_image_status, \
     post_on_instagram
 
@@ -28,6 +30,12 @@ It works like this:
     - `p` - a list of photos
     - `b` - to see a button above the inline results to switch back to a private chat with the bot
 """
+
+try:
+    Image.create_table()
+except peewee.OperationalError:
+    print('Tabela já existe')
+
 
 message_with_inline_keyboard = None
 
@@ -82,6 +90,7 @@ async def on_chat_message(msg):
 async def on_callback_query(msg):
     query_id, from_id, data = telepot.glance(msg, flavor='callback_query')
     print('Callback query:', query_id, from_id, data)
+    print(msg)
     global chat_id_reply
 
     if data == 'yes':

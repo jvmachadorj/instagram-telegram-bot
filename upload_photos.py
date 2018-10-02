@@ -1,19 +1,32 @@
 import ast
-import asyncio
 import datetime
+import json
 import os
 import time
 from random import randint
+
+import peewee
 import requests
 from decouple import config
 
 from models import Image
+
+try:
+    Image.create_table()
+except peewee.OperationalError:
+    print('Tabela já existe')
 
 TAGS = ['travel', 'nature']
 CATEGORY = ['nature', 'backgrounds']
 URL = "https://pixabay.com/api/"
 KEY = config('PIXA_BAY_KEY')
 per_page = "100"
+CAPTION = "What is your next destination? Travel smarter with @smartgeartravel and save on airline baggage fees.\n\n" \
+          "Launching on #kickstarter in Q3 2018 - For more info follow link in Bio.\n\n{}"
+
+CAPTION_TAGS = "#WhatIsYourNextDesination #smartgeartravel #onebagtravel #digitalnomad #travelphotography" \
+               "#wanderlust #travelgram #instatravel #neverstopexploring #familytravel #travelcouple #worldschool" \
+               "#gapyeartravel #backpacking #flashpacker #vagabond #backpacker #SaveBaggageFees"
 
 
 def upload_photos():
@@ -75,13 +88,50 @@ def download_photo():
 
 
 def treat_tags(tags):
-    return "#exemplo"
+    tags_list = [x.strip() for x in CAPTION_TAGS.split('#')]
+    print(len(tags_list))
+
+    while len(tags_list) <= 30:
+        for tag in tags.split(' '):
+            if tag not in tags_list:
+                tags_list.append(tag)
+                if len(tags_list) >= 30:
+                    break
+
+        if len(tags_list) < 30:
+            headers = {
+                'Content-Type': 'text/html; charset=utf-8'
+            }
+            tags = tags.split(' ')
+            n = randint(0, len(tags)-1)
+            tag = tags[n]
+            url = 'https://api.ritekit.com/v1/stats/hashtag-suggestions?text={}&client_id={}'.\
+                format(tag, config('TAGS_ID'))
+            request = requests.request("GET", url, headers=headers)
+
+            print(request)
+
+            result = json.loads(request.text)['data']
+            print(result)
+
+            for hashtag in result:
+                external_tag = hashtag['hashtag']
+                tags_list.append(external_tag)
+                if len(tags_list) >= 30:
+                    break
+        break
+
+    string_tags = ' #'.join(tags_list)
+
+    return string_tags
 
 
 def create_random_caption(tags):
-    #TODO Tratar as tags e retornar como #
     treated_tags = treat_tags(tags)
-    return "Que belo de um comentario {}".format(treated_tags)
+
+    caption = CAPTION.format(treated_tags)
+    print(caption)
+    return caption
 
 
 def save_to_db(line, path, url):
@@ -92,7 +142,7 @@ def save_to_db(line, path, url):
     pixabay_id = line['id']
     created_at = datetime.datetime.now()
     status = "Not Posted"
-    tags = line['tags']
+    tags = line['tags'].replace(",", "")
     caption = create_random_caption(tags)
 
     image = Image.create(name=name, url=url, path=path, pixabay_id=pixabay_id,
