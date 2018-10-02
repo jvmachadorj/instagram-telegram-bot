@@ -16,10 +16,11 @@ try:
 except peewee.OperationalError:
     print('Tabela já existe')
 
-TAGS = ['travel', 'nature']
-CATEGORY = ['nature', 'backgrounds']
+TAGS = ['travel', 'nature', 'landscape', 'backpacker', 'tourist', 'mountain', 'view', 'hiking', 'trees', 'sunset']
+CATEGORY = ['nature', 'backgrounds', 'people', 'places', 'travel', 'buildings']
 URL = "https://pixabay.com/api/"
 KEY = config('PIXA_BAY_KEY')
+ORDER = ['popular', 'latest']
 per_page = "100"
 CAPTION = "What is your next destination? Travel smarter with @smartgeartravel and save on airline baggage fees.\n\n" \
           "Launching on #kickstarter in Q3 2018 - For more info follow link in Bio.\n\n{}"
@@ -31,13 +32,21 @@ CAPTION_TAGS = "#WhatIsYourNextDesination #smartgeartravel #onebagtravel #digita
 
 def upload_photos():
     global per_page
-    query_tags = "+".join(TAGS)
+    n = randint(0, len(TAGS)-1)
+    i = 0
+    random_tags = []
+    while i < n:
+        h = randint(0, n)
+        if TAGS[h] not in random_tags:
+            random_tags.append(TAGS[h])
+            i += 1
+
+    query_tags = "+".join(random_tags)
     query_categories = ",".join(CATEGORY)
 
     querystring = {"key": KEY, "q": query_tags, "image_type": "photo",
                    "category": query_categories,
-                   "safesearch": "true", "per_page": per_page}
-    time.sleep(5)
+                   "safesearch": "true", "per_page": per_page, "order": ORDER}
     response = requests.request("GET", URL, params=querystring)
 
     result = ast.literal_eval(response.text)['hits']
@@ -162,3 +171,5 @@ def post_on_instagram(image, login):
     # Upload Photo
     login.uploadPhoto(image.path, caption=image.caption, upload_id=None)
     print("Posted with caption {}".format(image.caption))
+
+download_photo()
