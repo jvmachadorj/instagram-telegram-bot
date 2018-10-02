@@ -171,5 +171,3 @@ def post_on_instagram(image, login):
     # Upload Photo
     login.uploadPhoto(image.path, caption=image.caption, upload_id=None)
     print("Posted with caption {}".format(image.caption))
-
-download_photo()
