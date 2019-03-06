@@ -1,5 +1,7 @@
 # Instagram-Telegram-Bot
 ## What it does
+This Telegram bot takes a random picture in pixabay, put a customized subscription and asks you if it can post in your instagram account
+
 In the .env file you need to put your initial settings
 
 ```
