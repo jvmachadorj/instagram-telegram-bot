@@ -15,7 +15,7 @@ moviepy==0.2.3.2
 multidict==4.4.2
 numpy==1.15.1
 peewee==3.7.0
-Pillow==5.2.0
+Pillow==6.2.0
 pycparser==2.19
 python-decouple==3.1
 python-telegram-bot==11.1.0
