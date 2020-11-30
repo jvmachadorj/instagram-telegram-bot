@@ -11,7 +11,7 @@ class Image(Model):
     pixabay_id = IntegerField()
     created_at = DateTimeField()
     tags = CharField()
-    status = CharField()  # "Not Posted", "Posted", "Refused"
+    status = CharField()
     caption = CharField()
 
     class Meta:

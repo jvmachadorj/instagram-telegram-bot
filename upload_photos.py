@@ -14,7 +14,7 @@ from models import Image
 try:
     Image.create_table()
 except peewee.OperationalError:
-    print('Tabela já existe')
+    print('Table already exists')
 
 TAGS = ['travel', 'nature', 'landscape', 'backpacker', 'tourist', 'mountain', 'view', 'hiking', 'trees', 'sunset']
 CATEGORY = ['nature', 'backgrounds', 'people', 'places', 'travel', 'buildings']
@@ -165,10 +165,3 @@ def save_to_db(line, path, url):
 def change_image_status(image):
     image.status = "Posted"
     image.save()
-
-
-def post_on_instagram(image, login):
-
-    # Upload Photo
-    login.uploadPhoto(image.path, caption=image.caption, upload_id=None)
-    print("Posted with caption {}".format(image.caption))
