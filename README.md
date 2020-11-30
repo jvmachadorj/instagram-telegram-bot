@@ -11,12 +11,15 @@ USERNAME = 'username'
 PASSWORD = 'password'
 ```
 
+### Where to find credentials
 
 The `TOKEN` is the Telegram TOKEN, to create one open Telegram app, search for @BotFather and start the chat. Send /newbot command and follow the instructions.
 
 The `PIXA_BAY_KEY` in the key from <https://pixabay.com/> and to get the jey, head to <https://pixabay.com/api/docs/>. Search for key and login to generate yours.
 
 USERNAME and PASSWORD is from your Instagram account.
+
+You also need a `RiteKit Client ID`, found in here https://ritekit.com/developer/dashboard/
 
 ## Setting up your virtual enviroment
 
