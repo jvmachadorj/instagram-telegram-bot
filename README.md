@@ -40,4 +40,4 @@ After installing the virtual env and to activate it, run this code to install al
 
 After that you are all Set Up
 
-Just run the command `python telegram_bot.py`
+Just run the command `python main.py`
