@@ -27,7 +27,7 @@ requests==2.11.1
 requests-toolbelt==0.7.0
 runp==0.0.2
 six==1.11.0
-sqlparse==0.4.1
+sqlparse==0.4.2
 telegram==0.0.1
 telepot==12.7
 tqdm==4.11.2
