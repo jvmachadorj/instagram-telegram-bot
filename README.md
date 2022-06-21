@@ -15,7 +15,7 @@ PASSWORD = 'password'
 
 The `TOKEN` is the Telegram TOKEN, to create one open Telegram app, search for @BotFather and start the chat. Send /newbot command and follow the instructions.
 
-The `PIXA_BAY_KEY` in the key from <https://pixabay.com/> and to get the jey, head to <https://pixabay.com/api/docs/>. Search for key and login to generate yours.
+The `PIXA_BAY_KEY` in the key from <https://pixabay.com/> and to get the key, head to <https://pixabay.com/api/docs/>. Search for key and login to generate yours.
 
 USERNAME and PASSWORD is from your Instagram account.
 
